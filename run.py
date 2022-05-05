@@ -7,20 +7,9 @@ import sys,os
 import csv
 import random
 import time
+from config import api_id,api_hash,phone
 
-auth = {}
-with open('user_auth.csv', encoding='UTF-8') as f:
-    rows = csv.reader(f,delimiter=",",lineterminator="\n")
-    next(rows, None)
-    for row in rows:
-        auth = {}
-        auth['api_id'] = int(row[0])
-        auth['api_hash'] = row[1]
-        auth['phone'] = row[2]
 
-api_id = auth['api_id']
-api_hash = auth['api_hash']
-phone = auth['phone']
 client = TelegramClient("anon",api_id, api_hash)
 client.start(phone)
 
@@ -112,7 +101,7 @@ def massMessager():
         messages = "".join(f.readlines())
 
 
-    for user in users:
+    for line_no,user in enumerate(users):
         if mode == 2:
             if user['username'] == "":
                 continue
@@ -125,7 +114,7 @@ def massMessager():
             sys.exit()
         message = messages
         try:
-            print("Sending Message to:", user['name'])
+            print("Sending Message to:", user['name'],"on line no: ",line_no+1)
             client.send_message(receiver, message.format(user['name']))
             print("Waiting {} seconds".format(SLEEP_TIME))
             time.sleep(SLEEP_TIME)
